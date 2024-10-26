@@ -28,8 +28,9 @@ async def start_command(message: Message) -> None:
             await post_user(telegram_id)
 
             generated_registration_referral = await registration_referral()
+            level = 1
 
-            await put_user(telegram_id, referral_code=generated_registration_referral)
+            await put_user(telegram_id, referral_code=generated_registration_referral, level=level)
 
             content = 'Приветствую 👋\nДобро пожаловать в Bitcoin кран от Fire Taps.\n' \
               'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \

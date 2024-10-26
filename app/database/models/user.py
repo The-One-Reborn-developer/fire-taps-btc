@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, String, Float, Integer
+from sqlalchemy import BigInteger, String, Float, Integer, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.models.base import Base
@@ -13,3 +13,5 @@ class User(Base):
     btc_balance: Mapped[float] = mapped_column(Float, nullable=True)
     referrals_amount: Mapped[int] = mapped_column(Integer, nullable=True)
     referral_code: Mapped[String] = mapped_column(String, nullable=True)
+    last_played: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+    level: Mapped[int] = mapped_column(Integer, nullable=True)
