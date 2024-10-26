@@ -14,17 +14,17 @@ load_dotenv(find_dotenv())
 
 
 async def on_startup() -> None:
+    await create_tables()
+
     try:
-        await create_tables()
+        bot = Bot(os.getenv('TELEGRAM_BOT_TOKEN'))
+        dp = Dispatcher()
+        dp.include_routers(start_router, profile_router)
+
+        await bot.delete_webhook(drop_pending_updates=True)
+        await dp.start_polling(bot)
     except Exception as e:
-        print(f'Error creating tables: {e}')
-
-    bot = Bot(os.getenv('TELEGRAM_BOT_TOKEN'))
-    dp = Dispatcher()
-    dp.include_routers(start_router, profile_router)
-
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+        print(f'Error starting bot: {e}')
 
 
 if __name__ == '__main__':
