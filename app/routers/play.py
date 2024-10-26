@@ -20,13 +20,19 @@ async def play(message: Message) -> None:
     try:
         await message.delete()
 
-        timestamp = datetime.now().timestamp()
+        now = datetime.now()
+        one_hour_ago = now - timedelta(hours=1)
         user = await get_user(message.from_user.id)
 
-        if user[3] is not None and timestamp - user[3] < timedelta(hours=1).total_seconds():
-            await message.answer('Вы уже играли в этом часу, попробуйте позже 😊')
+        if user[3] is not None and user[3] > one_hour_ago:
+            time_since_last_play = now - user[3]
+            minutes_until_next_play = 60 - int(time_since_last_play.total_seconds() // 60)
+
+            content = f'Вы уже играли в этот час, попробуйте через {minutes_until_next_play} минут 😊'
+
+            await message.answer(content)
         else:
-            await put_user(message.from_user.id, last_played=datetime.fromtimestamp(timestamp))
+            await put_user(message.from_user.id, last_played=now)
 
             content = 'Получаем криптовалюту, нужно немного подождать ⏳'
 
