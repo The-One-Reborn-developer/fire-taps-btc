@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, String, Float, Integer, DateTime
+from sqlalchemy import BigInteger, String, Float, Integer, DateTime, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.models.base import Base
@@ -15,3 +15,4 @@ class User(Base):
     referral_code: Mapped[String] = mapped_column(String, nullable=True)
     last_played: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
     level: Mapped[int] = mapped_column(Integer, nullable=True)
+    is_admin: Mapped[bool] = mapped_column(Boolean, nullable=True)

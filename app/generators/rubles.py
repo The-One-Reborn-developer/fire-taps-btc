@@ -1,7 +1,7 @@
 import random
 
 
-async def btc(level: int) -> float:
+async def rubles(level: int) -> float:
     """
     Generates a random amount of Bitcoin based on the user's level.
 
@@ -16,12 +16,15 @@ async def btc(level: int) -> float:
     Level 3 has a 5% chance to generate a random BTC amount between 10 and 30,
     otherwise, it generates a random BTC amount between 0.01 and 10.
     """
-    if level == 1:
-        return round(random.uniform(0.5, 30), 2)
-    elif level == 2:
-        return round(random.uniform(0.5, 15), 2)
-    elif level == 3:
-        if random.random() < 0.05:
-            return round(random.uniform(10, 30), 2)
-        else:
-            return round(random.uniform(0.01, 10), 2)
+    try:
+        if level == 1:
+            return round(random.uniform(0.5, 30), 2)
+        elif level == 2:
+            return round(random.uniform(0.5, 15), 2)
+        elif level == 3:
+            if random.random() < 0.05:
+                return round(random.uniform(10, 30), 2)
+            else:
+                return round(random.uniform(0.01, 10), 2)
+    except Exception as e:
+        print(f'Error generating rubles: {e}')

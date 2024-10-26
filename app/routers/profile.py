@@ -19,7 +19,7 @@ async def profile(message: Message) -> None:
         if user[0] is None:
             btc_balance = 0
         else:
-            btc_balance = user[0]
+            btc_balance = '{:.8f}'.format(user[0])
 
         if user[1] is None:
             referrals_amount = 0
