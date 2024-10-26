@@ -12,6 +12,9 @@ async def get_user(telegram_id: int) -> User | None:
             if user:
                 return [
                     user.phone,
+                    user.btc_balance,
+                    user.referrals_amount,
+                    user.referral_code
                 ]
             
             return None
