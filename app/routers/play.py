@@ -29,12 +29,10 @@ async def play(message: Message) -> None:
             time_since_last_play = now - user[3]
             minutes_until_next_play = 60 - int(time_since_last_play.total_seconds() // 60)
 
-            content = f'Вы уже играли в этот час, попробуйте через {minutes_until_next_play} минут 😊'
+            content = f'Ты уже играл в этот час, попробуй через {minutes_until_next_play} минут 😊'
 
             await message.answer(content)
         else:
-            await put_user(message.from_user.id, last_played=now)
-
             content = 'Получаем криптовалюту, нужно немного подождать ⏳'
 
             await message.answer(content)
@@ -48,10 +46,12 @@ async def play(message: Message) -> None:
             if user[0] is None:
                 await put_user(message.from_user.id, btc_balance=generated_crypto)
             else:
-                await put_user(message.from_user.id, btc_balance=user[0] + formatted_generated_crypto)
+                await put_user(message.from_user.id, btc_balance=user[0] + float(formatted_generated_crypto))
 
-            content = f'Вы получили {formatted_generated_crypto} ₿'
+            content = f'Ты получил {formatted_generated_crypto} ₿'
 
             await message.answer(content)
+
+            await put_user(message.from_user.id, last_played=now)
     except Exception as e:
         print(f'Play error: {e}')

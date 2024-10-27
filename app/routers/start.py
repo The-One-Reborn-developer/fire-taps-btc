@@ -44,7 +44,7 @@ async def start_command(message: Message) -> None:
         except Exception as e:
             print(f'Error creating user: {e}')
     else:
-        content = 'Вы уже зарегистрированы, можете пользоваться ботом 🙂'
+        content = 'Ты уже зарегистрирован, можешь пользоваться ботом 🙂'
 
         await message.answer(content, reply_markup=main_keyboard())
     
@@ -58,7 +58,7 @@ async def contact_handler(message: Message) -> None:
     try:
         await put_user(telegram_id, phone=phone_number)
 
-        content = 'Вы зарегистрированы, можете пользоваться ботом 🙂'
+        content = 'Ты зарегистрирован, можешь пользоваться ботом 🙂'
 
         await message.delete()
 
@@ -66,7 +66,7 @@ async def contact_handler(message: Message) -> None:
     except Exception as e:
         print(f'Error updating user`s phone: {e}')
 
-        content = 'Ошибка при регистрации, попробуйте ещё раз 😕'
+        content = 'Ошибка при регистрации, попробуй ещё раз 😕'
 
         await message.delete()
 

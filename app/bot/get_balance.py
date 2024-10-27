@@ -1,6 +1,6 @@
 import re
 
-from app.bot.create_instance import crypto_bot
+from app.bot.crypto_bot import crypto_bot
 
 
 async def get_balance() -> float:
