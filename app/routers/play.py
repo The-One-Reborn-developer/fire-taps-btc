@@ -11,7 +11,7 @@ from app.database.queues.put_user import put_user
 from app.generators.waiting_time import waiting_time
 from app.generators.rubles import rubles
 
-from app.scripts.get_btc_rate import get_btc_rate
+from app.bot.get_btc_rate import get_btc_rate
 
 play_router = Router()
 

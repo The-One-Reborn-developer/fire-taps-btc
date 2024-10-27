@@ -1,18 +1,10 @@
-import os
 import re
 
-from cryptopay import CryptoPay, TESTNET
-
-from dotenv import load_dotenv, find_dotenv
+from app.bot.create_instance import crypto_bot
 
 
-load_dotenv(find_dotenv())
-
-
-async def get_btc_rate():
+async def get_btc_rate() -> float:
     try:
-        crypto_bot = CryptoPay(os.getenv('CRYPTO_BOT_TOKEN'), api_server=TESTNET)
-
         exchange_rates = await crypto_bot.get_exchange_rates()
 
         pattern = re.compile(r'.*BTC.*RUB.*')
