@@ -1,10 +1,10 @@
-import os
-
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
+
+from cryptopay.types import Invoice
 
 from app.database.queues.get_user import get_user
 
@@ -140,3 +140,8 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
         error_code = int(str(e).split(' ')[0].strip('[]'))
         if error_code == 400:
             await message.answer('Введите сумму эквивалентную или больше 0.01 $ USD 😉')
+
+
+@crypto_bot.polling_handler()
+async def handle_payment(invoice: Invoice, message: Message) -> None:
+    await message.answer(f'Платеж {invoice.amount} {invoice.asset} успешно оплачён 🙂')
