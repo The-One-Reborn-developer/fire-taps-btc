@@ -1,10 +1,11 @@
 from aiogram import Router, F
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message
 from aiogram.filters import Command
 
 from app.database.queues.get_user import get_user
 
 from app.keyboards.admin import admin_keyboard
+from app.keyboards.main import main_keyboard
 
 
 admin_router = Router()
@@ -21,3 +22,10 @@ async def admin_panel(message: Message) -> None:
             await message.answer('Ошибка входа в панель администратора ❌')
     except Exception as e:
         print(f'Admin panel error: {e}')
+
+
+@admin_router.message(F.text == 'Выйти из админ панели 🔙')
+async def exit_admin_panel(message: Message) -> None:
+    await message.delete()
+    
+    await message.answer('Вы вышли из панели администратора', reply_markup=main_keyboard())
