@@ -16,7 +16,8 @@ async def get_user(telegram_id: int) -> User | None:
                         user.referrals_amount,
                         user.referral_code,
                         user.last_played,
-                        user.level
+                        user.level,
+                        user.is_admin
                     ]
                 else:
                     return None

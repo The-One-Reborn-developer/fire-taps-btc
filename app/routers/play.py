@@ -50,7 +50,7 @@ async def play(message: Message) -> None:
             else:
                 await put_user(message.from_user.id, btc_balance=user[0] + formatted_generated_crypto)
 
-            content = f'Вы получили {formatted_generated_crypto} ₿ из {generated_rubles} ₽'
+            content = f'Вы получили {formatted_generated_crypto} ₿'
 
             await message.answer(content)
     except Exception as e:
