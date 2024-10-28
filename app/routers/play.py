@@ -4,22 +4,39 @@ from datetime import datetime, timedelta
 
 from aiogram import Router, F
 from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
 
 from app.database.queues.get_user_by_id import get_user_by_id
 from app.database.queues.put_user import put_user
+from app.database.queues.get_user_by_play_referral import get_user_by_play_referral
 
 from app.generators.waiting_time import waiting_time
 from app.generators.rubles import rubles
 
 from app.bot.get_btc_rate import get_btc_rate
 
+
 play_router = Router()
 
 
 @play_router.message(F.text == 'Играть 💸')
-async def play(message: Message) -> None:
+async def check_referral_code(message: Message, state: FSMContext) -> None:
     try:
+        await state.clear()
+
         await message.delete()
+
+        user_play_referral_code = await get_user_by_play_referral(message.from_user.id)
+
+        if user_play_referral_code:
+            pass
+        else:
+            content = 'Твоя реферальная ссылка неактуальна, ты не сможешь получить криптовалюту.\n' \
+                      'Получи актуальную ссылку в 👉<a href="https://www.google.com">канале</a>👈'
+            
+            await message.answer(content, parse_mode='HTML')
+
+            return None
 
         now = datetime.now()
         one_hour_ago = now - timedelta(hours=1)

@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
 from app.database.queues.get_user_by_id import get_user_by_id
-from app.database.queues.get_user_by_referral import get_user_by_referral
+from app.database.queues.get_user_by_registration_referral import get_user_by_registration_referral
 from app.database.queues.post_user import post_user
 from app.database.queues.put_user import put_user
 
@@ -55,6 +55,10 @@ async def start_command(message: Message, state: FSMContext) -> None:
             await message.answer(content, reply_markup=start_keyboard())
         except Exception as e:
             print(f'Error creating user: {e}')
+
+            content = 'Произошла ошибка, попробуй ещё раз или обратись в поддержку 😕'
+
+            await message.answer(content)
     else:
         await state.clear()
 
@@ -96,7 +100,7 @@ async def registration_referral_code_handler(message: Message, state: FSMContext
     await message.delete()
 
     try:
-        user_found = await get_user_by_referral(referral_code)
+        user_found = await get_user_by_registration_referral(referral_code)
 
         if user_found:
             content = 'Ты зарегистрирован, можешь пользоваться ботом 🙂'

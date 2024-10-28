@@ -6,7 +6,7 @@ from app.database.models.async_session import async_session
 from app.database.queues.put_user import put_user
 
 
-async def get_user_by_referral(referral_code: str) -> bool:
+async def get_user_by_registration_referral(referral_code: str) -> bool:
     async with async_session() as session:
         async with session.begin():
             try:
