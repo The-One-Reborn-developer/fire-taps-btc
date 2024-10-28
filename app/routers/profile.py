@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message
 
-from app.database.queues.get_user import get_user
+from app.database.queues.get_user_by_id import get_user_by_id
 
 from app.keyboards.withdraw import withdraw_keyboard
 
@@ -14,7 +14,7 @@ async def profile(message: Message) -> None:
     try:
         await message.delete()
         
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
         
         if user[0] is None:
             btc_balance = 0

@@ -6,8 +6,7 @@ from aiogram.fsm.state import StatesGroup, State
 
 from cryptopay.types import Invoice
 
-from app.database.queues.get_user import get_user
-
+from app.database.queues.get_user_by_id import get_user_by_id
 from app.bot.crypto_bot import crypto_bot
 from app.bot.get_balance import get_balance
 
@@ -27,7 +26,7 @@ admin_router = Router()
 @admin_router.message(Command('admin'))
 async def admin_panel(message: Message, state: FSMContext) -> None:
     try:
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
 
         if user[5] is True:
             await message.delete()
@@ -42,9 +41,9 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
 
             content = 'Вход в панель администратора 🔑\n' \
                       f'Баланс BTC кошелька приложения: {formatted_balance} ₿\n' \
-                      f'Текущий реферальный код для игры: {play_referral_code}'
+                      f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
 
-            await message.answer(content, reply_markup=admin_keyboard())
+            await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
         else:
             await message.answer('Ошибка входа в панель администратора ❌')
     except Exception as e:
@@ -54,7 +53,7 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
 @admin_router.message(F.text == 'Выйти из админ панели 🔙')
 async def exit_admin_panel(message: Message, state: FSMContext) -> None:
     try:
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
 
         if user[5] is True:
             await message.delete()
@@ -71,7 +70,7 @@ async def exit_admin_panel(message: Message, state: FSMContext) -> None:
 @admin_router.message(F.text == 'Сгенерировать реф. код для игры 🎁')
 async def generate_referral_code(message: Message, state: FSMContext) -> None:
     try:
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
 
         if user[5] is True:
             await message.delete()
@@ -87,9 +86,9 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
             await state.clear()
 
             content = f'Баланс BTC кошелька приложения: {formatted_balance} ₿\n' \
-                      f'Текущий реферальный код для игры: {play_referral_code}'
+                      f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
 
-            await message.answer(content, reply_markup=admin_keyboard())
+            await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
         else:
             pass
     except Exception as e:
@@ -99,7 +98,7 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
 @admin_router.message(F.text == 'Пополнить BTC кошелёк ₿')
 async def deposit_btc(message: Message, state: FSMContext) -> None:
     try:
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
 
         if user[5] is True:
             await message.delete()
@@ -118,7 +117,7 @@ async def deposit_btc(message: Message, state: FSMContext) -> None:
 @admin_router.message(Deposit.amount)
 async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
     try:
-        user = await get_user(message.from_user.id)
+        user = await get_user_by_id(message.from_user.id)
 
         if user[5] is True:
             await message.delete()

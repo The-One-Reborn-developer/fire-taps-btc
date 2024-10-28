@@ -4,7 +4,7 @@ from app.database.models.user import User
 from app.database.models.async_session import async_session
 
 
-async def get_user(telegram_id: int) -> User | None:
+async def get_user_by_id(telegram_id: int) -> User | None:
     async with async_session() as session:
         async with session.begin():
             try:
@@ -14,10 +14,11 @@ async def get_user(telegram_id: int) -> User | None:
                     return [
                         user.btc_balance,
                         user.referrals_amount,
-                        user.referral_code,
+                        user.registration_referral_code,
                         user.last_played,
                         user.level,
-                        user.is_admin
+                        user.is_admin,
+                        user.number_of_plays
                     ]
                 else:
                     return None
