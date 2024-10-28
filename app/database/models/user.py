@@ -11,7 +11,7 @@ class User(Base):
     telegram_id: Mapped[BigInteger] = mapped_column(BigInteger)
     phone: Mapped[String] = mapped_column(String, nullable=True)
     btc_balance: Mapped[float] = mapped_column(Float, nullable=True, default=0.0)
-    referrals_amount: Mapped[int] = mapped_column(Integer, nullable=True)
+    referrals_amount: Mapped[int] = mapped_column(Integer, nullable=True, default=0)
     registration_referral_code: Mapped[String] = mapped_column(String, nullable=True)
     play_referral_code: Mapped[String] = mapped_column(String, nullable=True)
     last_played: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
