@@ -10,14 +10,14 @@ from app.routers.profile import profile_router
 from app.routers.play import play_router
 from app.routers.admin import admin_router
 
-from app.database.queues.create_tables import create_tables
+from app.tasks.celery import create_tables_task
 
 
 load_dotenv(find_dotenv())
 
 
 async def on_startup() -> None:
-    await create_tables()
+    create_tables_task.delay()
 
     try:
         bot = Bot(os.getenv('TELEGRAM_BOT_TOKEN'))

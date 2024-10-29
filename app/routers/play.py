@@ -6,14 +6,13 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from app.database.queues.get_user_by_id import get_user_by_id
-from app.database.queues.put_user import put_user
-from app.database.queues.get_user_by_play_referral import get_user_by_play_referral
+from app.tasks.celery import get_user_by_id_task
+from app.tasks.celery import put_user_task
+from app.tasks.celery import get_user_by_play_referral_task
+from app.tasks.celery import get_btc_rate_task
 
 from app.generators.waiting_time import waiting_time
 from app.generators.rubles import rubles
-
-from app.bot.get_btc_rate import get_btc_rate
 
 
 play_router = Router()
@@ -39,7 +38,8 @@ async def check_referral_code(message: Message, state: FSMContext) -> None:
 
         await message.delete()
 
-        user_play_referral_code = await get_user_by_play_referral(message.from_user.id)
+        user_play_referral_code_task = get_user_by_play_referral_task.delay(message.from_user.id)
+        user_play_referral_code = user_play_referral_code_task.get()
 
         if user_play_referral_code:
             pass
@@ -53,7 +53,8 @@ async def check_referral_code(message: Message, state: FSMContext) -> None:
 
         now = datetime.now()
         one_hour_ago = now - timedelta(hours=1)
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[3] is not None and user[3] > one_hour_ago:
             time_since_last_play = now - user[3]
@@ -70,21 +71,23 @@ async def check_referral_code(message: Message, state: FSMContext) -> None:
             time.sleep(await waiting_time())
 
             generated_rubles = await rubles(user[4])
-            generated_btc = round((generated_rubles / await get_btc_rate()), 8)
+            btc_rate_task = get_btc_rate_task.delay()
+            btc_rate = btc_rate_task.get()
+            generated_btc = round((generated_rubles / btc_rate), 8)
             formatted_generated_crypto = '{:.8f}'.format(generated_btc)
 
-            await put_user(message.from_user.id, btc_balance=user[0] + generated_btc, number_of_plays=user[6] + 1)
+            put_user_task.delay(message.from_user.id, btc_balance=user[0] + generated_btc, number_of_plays=user[6] + 1)
 
             if user[6] > 25 and user[6] < 50:
-                await put_user(message.from_user.id, level=2)
+                put_user_task.delay(message.from_user.id, level=2)
             elif user[6] > 50:
-                await put_user(message.from_user.id, level=3)
+                put_user_task.delay(message.from_user.id, level=3)
 
             content = f'Ты получил {formatted_generated_crypto} ₿'
 
             await message.answer(content)
 
-            await put_user(message.from_user.id, last_played=now)
+            put_user_task.delay(message.from_user.id, last_played=now)
     except Exception as e:
         print(f'Play error: {e}')
 

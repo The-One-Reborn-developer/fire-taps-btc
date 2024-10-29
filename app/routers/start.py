@@ -4,10 +4,10 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 
-from app.database.queues.get_user_by_id import get_user_by_id
-from app.database.queues.get_user_by_registration_referral import get_user_by_registration_referral
-from app.database.queues.post_user import post_user
-from app.database.queues.put_user import put_user
+from app.tasks.celery import get_user_by_id_task
+from app.tasks.celery import get_user_by_registration_referral_task
+from app.tasks.celery import post_user_task
+from app.tasks.celery import put_user_task
 
 from app.keyboards.start import start_keyboard
 from app.keyboards.main import main_keyboard
@@ -46,20 +46,21 @@ async def start_command(message: Message, state: FSMContext) -> None:
 
     telegram_id = message.from_user.id
     try:
-        user = await get_user_by_id(telegram_id)
+        user_task = get_user_by_id_task.delay(telegram_id)
+        user = user_task.get()
     except Exception as e:
         print(f'Error getting user: {e}')
 
     if not user:
         try:
-            await post_user(telegram_id)
+            post_user_task.delay(telegram_id)
 
             generated_registration_referral = await registration_referral()
 
             if telegram_id == 7167827272 or telegram_id == 7039333995:
-                await put_user(telegram_id, registration_referral_code=generated_registration_referral, is_admin=True)
+                put_user_task.delay(telegram_id, registration_referral_code=generated_registration_referral, is_admin=True)
             else:
-                await put_user(telegram_id, registration_referral_code=generated_registration_referral)
+                put_user_task.delay(telegram_id, registration_referral_code=generated_registration_referral)
 
             content = 'Приветствую 👋\nДобро пожаловать в Bitcoin кран от Fire Taps.\n' \
               'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \
@@ -95,7 +96,7 @@ async def contact_handler(message: Message, state: FSMContext) -> None:
     telegram_id = message.from_user.id
 
     try:
-        await put_user(telegram_id, phone=phone_number)
+        put_user_task.delay(telegram_id, phone=phone_number)
 
         content = 'Введи реферальный код для завершения регистрации 🔑'
 
@@ -126,9 +127,10 @@ async def registration_referral_code_handler(message: Message, state: FSMContext
     await message.delete()
 
     try:
-        user_found = await get_user_by_registration_referral(referral_code)
+        user_found_task = get_user_by_registration_referral_task.delay(referral_code)
+        user_found = user_found_task.get()
 
-        if user_found:
+        if user_found is True:
             content = 'Ты зарегистрирован, можешь пользоваться ботом 🙂'
 
             await message.answer(content, reply_markup=main_keyboard())

@@ -3,7 +3,7 @@ from cryptopay.types import Check
 from app.bot.crypto_bot import crypto_bot
 
 
-async def create_check(amount) -> Check | int:
+def create_check(amount) -> Check | int:
     """
     Creates a check for the specified amount in USDT using the crypto bot.
 
@@ -11,7 +11,7 @@ async def create_check(amount) -> Check | int:
     :return: A Check object if successful, or 400 if there is a validation error with the input amount.
     """
     try:
-        check = await crypto_bot.create_check(float(amount), 'USDT')
+        check = crypto_bot.create_check(float(amount), 'USDT')
 
         return check
     except Exception as e:

@@ -1,10 +1,10 @@
 from sqlalchemy import select
 
 from app.database.models.user import User
-from app.database.models.async_session import async_session
+from app.database.models.sync_session import sync_session
 
 
-async def get_user_by_id(telegram_id: int) -> User | None:
+def get_user_by_id(telegram_id: int) -> User | None:
     """
     Gets a user by telegram_id from the database.
 
@@ -14,10 +14,10 @@ async def get_user_by_id(telegram_id: int) -> User | None:
     Returns:
         User | None: The user from the database, or None if no user was found.
     """
-    async with async_session() as session:
-        async with session.begin():
+    with sync_session() as session:
+        with session.begin():
             try:
-                user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
+                user = session.scalar(select(User).where(User.telegram_id == telegram_id))
 
                 if user:
                     return [

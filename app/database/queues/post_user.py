@@ -1,10 +1,10 @@
 from sqlalchemy import select
 
 from app.database.models.user import User
-from app.database.models.async_session import async_session
+from app.database.models.sync_session import sync_session
 
 
-async def post_user(telegram_id: int) -> None:
+def post_user(telegram_id: int) -> None:
     """
     Creates a new user in the database if the user does not already exist.
 
@@ -14,10 +14,10 @@ async def post_user(telegram_id: int) -> None:
     Returns:
         None
     """
-    async with async_session() as session:
-        async with session.begin():
+    with sync_session() as session:
+        with session.begin():
             try:
-                user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
+                user = session.scalar(select(User).where(User.telegram_id == telegram_id))
 
                 if not user:
                     user = User(telegram_id=telegram_id)

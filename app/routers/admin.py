@@ -6,9 +6,10 @@ from aiogram.fsm.state import StatesGroup, State
 
 from cryptopay.types import Invoice
 
-from app.database.queues.get_user_by_id import get_user_by_id
 from app.bot.crypto_bot import crypto_bot
-from app.bot.get_balance import get_balance
+
+from app.tasks.celery import get_balance_task
+from app.tasks.celery import get_user_by_id_task
 
 from app.generators.play_referral import play_referral
 
@@ -29,13 +30,19 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
     Handles /admin command. Checks if user is admin and shows admin panel with bot`s balance and current referral code.
     """
     try:
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[5] is True:
             await message.delete()
 
-            balance = await get_balance()
-            formatted_balance = '{:.2f}'.format(balance)
+            balance_task = get_balance_task.delay()
+            balance = balance_task.get()
+
+            if balance is None:
+                formatted_balance = 0.00
+            else:
+                formatted_balance = '{:.2f}'.format(balance)
 
             with open('app/temp/play_referral_code.txt', 'r') as f:
                 play_referral_code = f.read()
@@ -59,7 +66,8 @@ async def exit_admin_panel(message: Message, state: FSMContext) -> None:
     Handles "Выйти из админ панели" button in admin panel. Checks if user is admin, clears state and sends message about exiting the admin panel.
     """
     try:
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[5] is True:
             await message.delete()
@@ -80,14 +88,16 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
     clears state and sends message about new referral code.
     """
     try:
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[5] is True:
             await message.delete()
 
             await play_referral()
 
-            balance = await get_balance()
+            balance_task = get_balance_task.delay()
+            balance = balance_task.get()
             formatted_balance = '{:.2f}'.format(balance)
 
             with open('app/temp/play_referral_code.txt', 'r') as f:
@@ -112,7 +122,8 @@ async def deposit_btc(message: Message, state: FSMContext) -> None:
     prompts for USDT amount to deposit, and sets the state for the deposit transaction.
     """
     try:
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[5] is True:
             await message.delete()
@@ -146,7 +157,8 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
     valid amount.
     """
     try:
-        user = await get_user_by_id(message.from_user.id)
+        user_task = get_user_by_id_task.delay(message.from_user.id)
+        user = user_task.get()
 
         if user[5] is True:
             await message.delete()

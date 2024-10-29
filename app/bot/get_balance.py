@@ -3,7 +3,7 @@ import re
 from app.bot.crypto_bot import crypto_bot
 
 
-async def get_balance() -> float:
+def get_balance() -> float:
     """
     Gets the current balance of the CryptoBot account in USDT.
 
@@ -14,7 +14,7 @@ async def get_balance() -> float:
         Exception: If there is an error getting the balance.
     """
     try:
-        balance_data = await crypto_bot.get_balance()
+        balance_data = crypto_bot.get_balance()
         
         pattern = re.compile(r'.*USDT.*')
         for line in balance_data:

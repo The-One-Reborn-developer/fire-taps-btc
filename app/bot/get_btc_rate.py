@@ -3,7 +3,7 @@ import re
 from app.bot.crypto_bot import crypto_bot
 
 
-async def get_btc_rate() -> float:
+def get_btc_rate() -> float:
     """
     Gets the current rate of 1 BTC in RUB from the CryptoPay Bot.
 
@@ -14,7 +14,7 @@ async def get_btc_rate() -> float:
         Exception: If there is an error getting the rate.
     """
     try:
-        exchange_rates = await crypto_bot.get_exchange_rates()
+        exchange_rates = crypto_bot.get_exchange_rates()
 
         pattern = re.compile(r'.*BTC.*RUB.*')
         for line in exchange_rates:

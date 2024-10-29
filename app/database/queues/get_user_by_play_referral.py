@@ -1,10 +1,10 @@
 from sqlalchemy import select
 
 from app.database.models.user import User
-from app.database.models.async_session import async_session
+from app.database.models.sync_session import sync_session
 
 
-async def get_user_by_play_referral(telegram_id: int) -> bool:
+def get_user_by_play_referral(telegram_id: int) -> bool:
     """
     Checks if the user's play referral code matches the current play referral.
 
@@ -14,13 +14,13 @@ async def get_user_by_play_referral(telegram_id: int) -> bool:
     Returns:
         bool: True if the user's play referral code matches the current play referral, False otherwise.
     """
-    async with async_session() as session:
-        async with session.begin():
+    with sync_session() as session:
+        with session.begin():
             try:
                 with open('app/temp/play_referral_code.txt', 'r') as f:
                     play_referral = f.read()
 
-                user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
+                user = session.scalar(select(User).where(User.telegram_id == telegram_id))
 
                 if user:
                     if user.play_referral_code == play_referral:

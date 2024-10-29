@@ -1,10 +1,10 @@
 from sqlalchemy import select
 
 from app.database.models.user import User
-from app.database.models.async_session import async_session
+from app.database.models.sync_session import sync_session
 
 
-async def put_user(telegram_id: int, **kwargs) -> None:
+def put_user(telegram_id: int, **kwargs) -> None:
     """
     Updates the user with the given telegram_id in the database with the given key-value arguments.
 
@@ -15,10 +15,10 @@ async def put_user(telegram_id: int, **kwargs) -> None:
     Returns:
         None
     """
-    async with async_session() as session:
-        async with session.begin():
+    with sync_session() as session:
+        with session.begin():
             try:
-                user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
+                user = session.scalar(select(User).where(User.telegram_id == telegram_id))
 
                 if user:
                     for key, value in kwargs.items():
