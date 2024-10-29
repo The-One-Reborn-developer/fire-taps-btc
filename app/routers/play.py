@@ -57,10 +57,10 @@ async def check_referral_code(message: Message, state: FSMContext) -> None:
             time.sleep(await waiting_time())
 
             generated_rubles = await rubles(user[4])
-            generated_crypto = round((generated_rubles / await get_btc_rate()), 8)
-            formatted_generated_crypto = '{:.8f}'.format(generated_crypto)
+            generated_btc = round((generated_rubles / await get_btc_rate()), 8)
+            formatted_generated_crypto = '{:.8f}'.format(generated_btc)
 
-            await put_user(message.from_user.id, btc_balance=user[0] + generated_crypto, number_of_plays=user[6] + 1)
+            await put_user(message.from_user.id, btc_balance=user[0] + generated_btc, number_of_plays=user[6] + 1)
 
             content = f'Ты получил {formatted_generated_crypto} ₿'
 

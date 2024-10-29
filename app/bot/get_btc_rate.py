@@ -11,6 +11,7 @@ async def get_btc_rate() -> float:
         for line in exchange_rates:
             if pattern.match(str(line)):
                 btc_to_rubles_line = line
+                break
         
         rate = float(re.search(r'rate=(\d*\.\d+|\d+)', str(btc_to_rubles_line)).group(1))
 

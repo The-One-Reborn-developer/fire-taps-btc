@@ -32,7 +32,7 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
             await message.delete()
 
             balance = await get_balance()
-            formatted_balance = '{:.8f}'.format(balance)
+            formatted_balance = '{:.2f}'.format(balance)
 
             with open('app/temp/play_referral_code.txt', 'r') as f:
                 play_referral_code = f.read()
@@ -40,7 +40,7 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
             await state.clear()
 
             content = 'Вход в панель администратора 🔑\n' \
-                      f'Баланс BTC кошелька приложения: {formatted_balance} ₿\n' \
+                      f'Баланс USDT кошелька приложения: {formatted_balance} ₮\n' \
                       f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
 
             await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
@@ -78,14 +78,14 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
             await play_referral()
 
             balance = await get_balance()
-            formatted_balance = '{:.8f}'.format(balance)
+            formatted_balance = '{:.2f}'.format(balance)
 
             with open('app/temp/play_referral_code.txt', 'r') as f:
                 play_referral_code = f.read()
 
             await state.clear()
 
-            content = f'Баланс BTC кошелька приложения: {formatted_balance} ₿\n' \
+            content = f'Баланс USDT кошелька приложения: {formatted_balance} ₮\n' \
                       f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
 
             await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
@@ -95,7 +95,7 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
         print(f'Generate referral code error: {e}')
 
 
-@admin_router.message(F.text == 'Пополнить BTC кошелёк ₿')
+@admin_router.message(F.text == 'Пополнить USDT кошелёк ₮')
 async def deposit_btc(message: Message, state: FSMContext) -> None:
     try:
         user = await get_user_by_id(message.from_user.id)
@@ -103,7 +103,7 @@ async def deposit_btc(message: Message, state: FSMContext) -> None:
         if user[5] is True:
             await message.delete()
 
-            content = 'Введите количество BTC для пополнения.'
+            content = 'Введите количество USDT для пополнения.'
 
             await state.set_state(Deposit.amount)
 
@@ -126,15 +126,15 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
 
             amount = await state.get_data()
 
-            invoice = await crypto_bot.create_invoice(amount['amount'], 'BTC')
+            invoice = await crypto_bot.create_invoice(amount['amount'], 'USDT')
 
-            await message.answer(f'Оплатите {amount["amount"]} BTC по ссылке в CryptoTestnetBot (тестовый счёт){invoice.mini_app_invoice_url}')
+            await message.answer(f'Оплатите {amount["amount"]} USDT по ссылке в CryptoTestnetBot (тестовый счёт){invoice.mini_app_invoice_url}')
 
             invoice.await_payment(message=message, state=state)
         else:
             pass
     except Exception as e:
-        print(f'Deposit BTC amount error: {e}')
+        print(f'Deposit USDT amount error: {e}')
 
         error_code = int(str(e).split(' ')[0].strip('[]'))
         if error_code == 400:

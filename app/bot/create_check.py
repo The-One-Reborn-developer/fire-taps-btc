@@ -5,7 +5,7 @@ from app.bot.crypto_bot import crypto_bot
 
 async def create_check(amount) -> Check | int:
     try:
-        check = await crypto_bot.create_check(float(amount), 'BTC')
+        check = await crypto_bot.create_check(float(amount), 'USDT')
 
         return check
     except Exception as e:

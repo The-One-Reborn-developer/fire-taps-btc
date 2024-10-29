@@ -40,7 +40,7 @@ async def start_command(message: Message, state: FSMContext) -> None:
 
             generated_registration_referral = await registration_referral()
 
-            if telegram_id == 7167827272:
+            if telegram_id == 7167827272 or telegram_id == 7039333995:
                 await put_user(telegram_id, registration_referral_code=generated_registration_referral, is_admin=True)
             else:
                 await put_user(telegram_id, registration_referral_code=generated_registration_referral)

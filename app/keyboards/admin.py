@@ -11,7 +11,7 @@ def admin_keyboard() -> ReplyKeyboardMarkup:
             ],
             [
                 KeyboardButton(
-                    text='Пополнить BTC кошелёк ₿'
+                    text='Пополнить USDT кошелёк ₮'
                 )
             ],
             [
