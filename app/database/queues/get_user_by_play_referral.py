@@ -5,6 +5,15 @@ from app.database.models.async_session import async_session
 
 
 async def get_user_by_play_referral(telegram_id: int) -> bool:
+    """
+    Checks if the user's play referral code matches the current play referral.
+
+    Args:
+        telegram_id (int): The telegram ID of the user to check.
+
+    Returns:
+        bool: True if the user's play referral code matches the current play referral, False otherwise.
+    """
     async with async_session() as session:
         async with session.begin():
             try:

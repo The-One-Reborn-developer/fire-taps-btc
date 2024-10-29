@@ -25,6 +25,9 @@ admin_router = Router()
 
 @admin_router.message(Command('admin'))
 async def admin_panel(message: Message, state: FSMContext) -> None:
+    """
+    Handles /admin command. Checks if user is admin and shows admin panel with bot`s balance and current referral code.
+    """
     try:
         user = await get_user_by_id(message.from_user.id)
 
@@ -52,6 +55,9 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
 
 @admin_router.message(F.text == 'Выйти из админ панели 🔙')
 async def exit_admin_panel(message: Message, state: FSMContext) -> None:
+    """
+    Handles "Выйти из админ панели" button in admin panel. Checks if user is admin, clears state and sends message about exiting the admin panel.
+    """
     try:
         user = await get_user_by_id(message.from_user.id)
 
@@ -69,6 +75,10 @@ async def exit_admin_panel(message: Message, state: FSMContext) -> None:
 
 @admin_router.message(F.text == 'Сгенерировать реф. код для игры 🎁')
 async def generate_referral_code(message: Message, state: FSMContext) -> None:
+    """
+    Handles "Сгенерировать реф. код для игры" button in admin panel. Checks if user is admin, generates new referral code,
+    clears state and sends message about new referral code.
+    """
     try:
         user = await get_user_by_id(message.from_user.id)
 
@@ -97,6 +107,10 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
 
 @admin_router.message(F.text == 'Пополнить USDT кошелёк ₮')
 async def deposit_btc(message: Message, state: FSMContext) -> None:
+    """
+    Handles "Пополнить USDT кошелёк" button in admin panel. Checks if user is admin,
+    prompts for USDT amount to deposit, and sets the state for the deposit transaction.
+    """
     try:
         user = await get_user_by_id(message.from_user.id)
 
@@ -116,6 +130,21 @@ async def deposit_btc(message: Message, state: FSMContext) -> None:
 
 @admin_router.message(Deposit.amount)
 async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
+    """
+    Handles user input for USDT amount to deposit. Checks if user is admin,
+    updates state with the given amount, creates an invoice for the given amount,
+    and sends a message with the invoice link to the user.
+
+    The invoice is then awaited for payment using the invoice.await_payment method.
+    If the invoice is paid, the state is cleared and the user is returned to the
+    admin panel.
+
+    If the user is not an admin, the message is simply deleted and no action is taken.
+
+    If an exception occurs during this process, the error code is checked and if it
+    is 400 (validation error), the user is sent a message with a hint to enter a
+    valid amount.
+    """
     try:
         user = await get_user_by_id(message.from_user.id)
 
@@ -128,7 +157,8 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
 
             invoice = await crypto_bot.create_invoice(amount['amount'], 'USDT')
 
-            await message.answer(f'Оплатите {amount["amount"]} USDT по ссылке в CryptoTestnetBot (тестовый счёт){invoice.mini_app_invoice_url}')
+            await message.answer(f'Оплатите {amount["amount"]} USDT по ссылке в CryptoTestnetBot (тестовый счёт){invoice.mini_app_invoice_url}',
+                                 reply_markup=admin_keyboard())
 
             invoice.await_payment(message=message, state=state)
         else:
@@ -143,4 +173,12 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
 
 @crypto_bot.polling_handler()
 async def handle_payment(invoice: Invoice, message: Message) -> None:
+    """
+    Handles the payment event when an invoice is paid. Sends a confirmation
+    message to the user indicating the successful payment of the specified 
+    amount and asset.
+
+    :param invoice: The Invoice object containing details of the payment.
+    :param message: The Message object to send a response to the user.
+    """
     await message.answer(f'Платеж {invoice.amount} {invoice.asset} успешно оплачён 🙂')

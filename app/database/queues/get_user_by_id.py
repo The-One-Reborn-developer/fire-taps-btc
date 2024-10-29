@@ -5,6 +5,15 @@ from app.database.models.async_session import async_session
 
 
 async def get_user_by_id(telegram_id: int) -> User | None:
+    """
+    Gets a user by telegram_id from the database.
+
+    Args:
+        telegram_id (int): The telegram_id of the user to fetch.
+
+    Returns:
+        User | None: The user from the database, or None if no user was found.
+    """
     async with async_session() as session:
         async with session.begin():
             try:

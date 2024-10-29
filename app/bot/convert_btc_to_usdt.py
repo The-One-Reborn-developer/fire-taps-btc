@@ -5,6 +5,12 @@ from app.bot.get_btc_rate import get_btc_rate
 
 
 async def convert_btc_to_usdt(btc_amount) -> float:
+    """
+    Converts the given amount of Bitcoin to USDT.
+
+    :param btc_amount: The amount of Bitcoin to convert.
+    :return: The converted amount of USDT.
+    """
     try:
         exchange_rates = await crypto_bot.get_exchange_rates()
 

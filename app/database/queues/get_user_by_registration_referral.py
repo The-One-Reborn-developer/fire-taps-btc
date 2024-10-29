@@ -7,6 +7,15 @@ from app.database.queues.put_user import put_user
 
 
 async def get_user_by_registration_referral(referral_code: str) -> bool:
+    """
+    Checks if the user's registration referral code matches the current registration referral.
+
+    Args:
+        referral_code (str): The referral code to check.
+
+    Returns:
+        bool: True if the user's registration referral code matches the current registration referral, False otherwise.
+    """
     async with async_session() as session:
         async with session.begin():
             try:

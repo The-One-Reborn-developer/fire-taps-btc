@@ -21,6 +21,19 @@ play_router = Router()
 
 @play_router.message(F.text == 'Играть 💸')
 async def check_referral_code(message: Message, state: FSMContext) -> None:
+    """
+    Checks if the user's referral code is valid and not expired.
+
+    If the referral code is invalid or expired, the user cannot play and will be notified.
+    If the referral code is valid and not expired, the user can play and will be notified of how long they have to wait before they can play again.
+
+    Args:
+        message (Message): The message that triggered this function.
+        state (FSMContext): The current state of the user.
+
+    Returns:
+        None
+    """
     try:
         await state.clear()
 
@@ -61,6 +74,11 @@ async def check_referral_code(message: Message, state: FSMContext) -> None:
             formatted_generated_crypto = '{:.8f}'.format(generated_btc)
 
             await put_user(message.from_user.id, btc_balance=user[0] + generated_btc, number_of_plays=user[6] + 1)
+
+            if user[6] > 25 and user[6] < 50:
+                await put_user(message.from_user.id, level=2)
+            elif user[6] > 50:
+                await put_user(message.from_user.id, level=3)
 
             content = f'Ты получил {formatted_generated_crypto} ₿'
 

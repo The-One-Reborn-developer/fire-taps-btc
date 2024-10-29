@@ -26,6 +26,22 @@ start_router = Router()
 
 @start_router.message(CommandStart())
 async def start_command(message: Message, state: FSMContext) -> None:
+    """
+    Handles the /start command.
+
+    If the user is not in the database, creates a new user, generates a registration referral code,
+    and sends a welcome message to the user.
+
+    If the user is already in the database, clears the state, and sends a message to the user
+    with a link to the main menu.
+
+    Args:
+        message (Message): The message with the /start command.
+        state (FSMContext): The current state of the user.
+
+    Returns:
+        None
+    """
     await state.set_state(Registration.start)
 
     telegram_id = message.from_user.id
@@ -70,6 +86,11 @@ async def start_command(message: Message, state: FSMContext) -> None:
 
 @start_router.message(Registration.contact)
 async def contact_handler(message: Message, state: FSMContext) -> None:
+    """
+    Handles the contact message in the Registration.contact state. Updates the user`s phone in the database,
+    sends the message with the prompt to enter the referral code, and sets the state to Registration.referral.
+    If any error occurs, sends the message with the error text and sets the state back to the start state.
+    """
     phone_number = message.contact.phone_number
     telegram_id = message.from_user.id
 
@@ -95,6 +116,11 @@ async def contact_handler(message: Message, state: FSMContext) -> None:
 
 @start_router.message(Registration.referral)
 async def registration_referral_code_handler(message: Message, state: FSMContext) -> None:
+    """
+    Handles the referral code message in the Registration.referral state. Checks if the referral code exists in the database,
+    sends the message with the result of the check, and sets the state back to the start state.
+    If any error occurs, sends the message with the error text and sets the state back to the start state.
+    """
     referral_code = message.text
 
     await message.delete()

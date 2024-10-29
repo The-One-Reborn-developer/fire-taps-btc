@@ -4,6 +4,15 @@ from app.bot.crypto_bot import crypto_bot
 
 
 async def get_balance() -> float:
+    """
+    Gets the current balance of the CryptoBot account in USDT.
+
+    Returns:
+        float: The current balance of the CryptoBot account in USDT.
+
+    Raises:
+        Exception: If there is an error getting the balance.
+    """
     try:
         balance_data = await crypto_bot.get_balance()
         
