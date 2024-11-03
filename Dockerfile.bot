@@ -13,9 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the code into the container
 COPY . .
 
-# Ensure the .env file is included
-COPY .env .env
-
 # Set environment variables (optional, adjust as needed)
 ENV PYTHONUNBUFFERED=1
 
