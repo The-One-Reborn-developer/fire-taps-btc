@@ -138,7 +138,7 @@ async def withdraw_btc(message: Message, state: FSMContext) -> None:
         converted_withdraw = converted_withdraw_task.get()
 
         if btc_balance < float(message.text):
-            content = 'Ваш баланс меньше введенной суммы. Попробуй ещё раз 🙂'
+            content = 'Твой баланс меньше введенной суммы. Попробуй ещё раз 🙂'
 
             await message.answer(content)
         elif app_balance < converted_withdraw:

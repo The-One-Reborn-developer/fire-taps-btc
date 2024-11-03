@@ -27,3 +27,5 @@ services:
       context: .
       dockerfile: Dockerfile.celery
     restart: always
+    volumes:
+      - ./fire_taps_btc.db:/app/tasks/app/fire_taps_btc.db

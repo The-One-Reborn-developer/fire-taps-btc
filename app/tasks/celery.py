@@ -30,6 +30,15 @@ app.conf.update(
 
 @app.task
 def create_tables_task() -> None:
+    """
+    Creates all tables defined in the application's metadata.
+
+    Utilizes the synchronous engine to establish a connection and runs an operation 
+    to create all tables. In the event of an error during table creation, logs the 
+    exception message.
+
+    This function does not return any value.
+    """
     logging.info('Creating tables...')
     create_tables()
     logging.info('Tables created.')
@@ -37,6 +46,15 @@ def create_tables_task() -> None:
 
 @app.task
 def get_user_by_id_task(telegram_id: int) -> User | None:
+    """
+    Retrieves a user from the database by their telegram_id.
+
+    Args:
+        telegram_id (int): The telegram_id of the user to fetch.
+
+    Returns:
+        User | None: The user from the database, or None if no user was found.
+    """
     logging.info(f'Getting user by ID: {telegram_id}')
     result = get_user_by_id(telegram_id)
 
@@ -46,11 +64,19 @@ def get_user_by_id_task(telegram_id: int) -> User | None:
     else:
         logging.info(f'User by ID: {telegram_id} not found.')
         return None
-    logging.info(f'User by ID: {telegram_id} got.')
 
 
 @app.task
 def get_user_by_play_referral_task(telegram_id: int) -> bool:
+    """
+    Retrieves a user from the database by their telegram_id and checks if the user's play referral code matches the current play referral.
+
+    Args:
+        telegram_id (int): The telegram_id of the user to fetch.
+
+    Returns:
+        bool: True if the user's play referral code matches the current play referral, False otherwise.
+    """
     logging.info(f'Getting user by play referral: {telegram_id}')
     result = get_user_by_play_referral(telegram_id)
 
@@ -64,6 +90,15 @@ def get_user_by_play_referral_task(telegram_id: int) -> bool:
 
 @app.task
 def get_user_by_registration_referral_task(referral_code: str) -> bool:
+    """
+    Retrieves a user from the database by their registration referral code and checks if the user's registration referral code matches the current registration referral.
+
+    Args:
+        referral_code (str): The registration referral code of the user to fetch.
+
+    Returns:
+        bool: True if the user's registration referral code matches the current registration referral, False otherwise.
+    """
     logging.info(f'Getting user by registration referral: {referral_code}')
     result = get_user_by_registration_referral(referral_code)
 
@@ -77,6 +112,15 @@ def get_user_by_registration_referral_task(referral_code: str) -> bool:
 
 @app.task
 def post_user_task(user_id: int) -> None:
+    """
+    Creates a new user in the database if the user does not already exist.
+
+    Args:
+        user_id (int): The telegram_id of the user to create.
+
+    Returns:
+        None
+    """
     logging.info(f'Posting user: {user_id}')
     post_user(user_id)
     logging.info(f'User: {user_id} posted.')
@@ -84,6 +128,16 @@ def post_user_task(user_id: int) -> None:
 
 @app.task
 def put_user_task(telegram_id: int, **kwargs) -> None:
+    """
+    Updates the user with the given telegram_id in the database with the given key-value arguments.
+
+    Args:
+        telegram_id (int): The telegram_id of the user to update.
+        **kwargs: The key-value arguments to update the user with.
+
+    Returns:
+        None
+    """
     logging.info(f'Putting user: {telegram_id}')
     put_user(telegram_id, **kwargs)
     logging.info(f'User: {telegram_id} put.')
@@ -91,6 +145,15 @@ def put_user_task(telegram_id: int, **kwargs) -> None:
 
 @app.task
 def convert_btc_to_usdt_task(btc: float) -> float:
+    """
+    Converts the given amount of Bitcoin to USDT.
+
+    Args:
+        btc (float): The amount of Bitcoin to convert.
+
+    Returns:
+        float | None: The converted amount of USDT or None if conversion fails.
+    """
     logging.info('Converting BTC to USDT...')
     result = convert_btc_to_usdt(btc)
 
@@ -104,6 +167,15 @@ def convert_btc_to_usdt_task(btc: float) -> float:
 
 @app.task
 def create_check_task(amount: float) -> int | dict | None:
+    """
+    Creates a check for the specified amount of USDT using the crypto bot.
+
+    Args:
+        amount (float): The amount of USDT to create the check for.
+
+    Returns:
+        int | dict | None: A Check object if successful, or 400 if there is a validation error with the input amount, or None if the check creation failed.
+    """
     logging.info('Creating check...')
     result = create_check(amount)
 
@@ -126,6 +198,15 @@ def create_check_task(amount: float) -> int | dict | None:
 
 @app.task
 def get_balance_task() -> float:
+    """
+    Gets the current balance of the CryptoBot account in USDT.
+
+    Returns:
+        float: The current balance of the CryptoBot account in USDT.
+
+    Raises:
+        Exception: If there is an error getting the balance.
+    """
     logging.info('Getting balance...')
     result = get_balance()
 
@@ -139,6 +220,15 @@ def get_balance_task() -> float:
 
 @app.task
 def get_btc_rate_task() -> float:
+    """
+    Gets the current rate of 1 BTC in RUB from the CryptoPay Bot.
+
+    Returns:
+        float: The current rate of 1 BTC in RUB.
+
+    Raises:
+        Exception: If there is an error getting the rate.
+    """
     logging.info('Getting BTC rate...')
     result = get_btc_rate()
 
