@@ -23,4 +23,4 @@ RUN adduser --disabled-password --gecos "" celeryuser
 USER celeryuser
 
 # Run Celery tasks
-CMD ["celery", "-A", "app.tasks.celery", "worker", "--loglevel=info", "-Q", "all_queues", "--uid=celeryuser"]
+CMD ["celery", "-A", "app.tasks.celery", "worker", "--loglevel=info", "-Q", "all_queues"]
