@@ -16,5 +16,11 @@ COPY . .
 # Set environment variables (optional, adjust as needed)
 ENV PYTHONUNBUFFERED=1
 
+# Create a non-root user
+RUN adduser --disabled-password --gecos "" celeryuser
+
+# Switch to non-root user
+USER celeryuser
+
 # Run Celery tasks
-CMD ["celery", "-A", "app.tasks.celery", "worker", "--loglevel=info", "-Q", "all_queues"]
+CMD ["celery", "-A", "app.tasks.celery", "worker", "--loglevel=info", "-Q", "all_queues", "--uid=celeryuser"]
