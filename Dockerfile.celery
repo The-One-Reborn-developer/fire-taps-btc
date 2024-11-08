@@ -19,6 +19,9 @@ ENV PYTHONUNBUFFERED=1
 # Create a non-root user
 RUN adduser --disabled-password --gecos "" celeryuser
 
+# Change ownership of the files
+RUN chown celeryuser:celeryuser .
+
 # Switch to non-root user
 USER celeryuser
 
