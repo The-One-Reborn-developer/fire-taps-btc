@@ -10,10 +10,11 @@ def main_keyboard() -> ReplyKeyboardMarkup:
     1. 'Играть' - starts a game.
     2. 'Профиль' - shows the user's profile.
 
-    :return: ReplyKeyboardMarkup with the described buttons.
+    Returns:
+        ReplyKeyboardMarkup with the described buttons.
     """
-    return ReplyKeyboardMarkup (
-        keyboard = [
+    return ReplyKeyboardMarkup(
+        keyboard=[
             [
                 KeyboardButton(
                     text='Играть 💸'

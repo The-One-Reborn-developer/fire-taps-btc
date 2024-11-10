@@ -61,17 +61,19 @@ async def start_command(message: Message, state: FSMContext) -> None:
                 admins = f.read().splitlines()
 
             if str(telegram_id) in admins:
-                put_user_task.delay(telegram_id, registration_referral_code=generated_registration_referral, is_admin=True)
+                put_user_task.delay(
+                    telegram_id, registration_referral_code=generated_registration_referral, is_admin=True)
             else:
-                put_user_task.delay(telegram_id, registration_referral_code=generated_registration_referral)
+                put_user_task.delay(
+                    telegram_id, registration_referral_code=generated_registration_referral)
 
             content = 'Приветствую 👋\nДобро пожаловать в Bitcoin кран от Fire Taps.\n' \
-              'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \
-              'Зови друзей в игру и получайте вместе ещё больше монет 🤵‍♂️🤵\n\n' \
-              'Чтобы начать нажми на кнопку внизу 👇'
-            
+                'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \
+                'Зови друзей в игру и получайте вместе ещё больше монет 🤵‍♂️🤵\n\n' \
+                'Чтобы начать нажми на кнопку внизу 👇'
+
             await state.set_state(Registration.contact)
-            
+
             await message.answer(content, reply_markup=start_keyboard())
         except Exception as e:
             print(f'Error creating user: {e}')
@@ -85,7 +87,6 @@ async def start_command(message: Message, state: FSMContext) -> None:
         content = 'Ты уже зарегистрирован, можешь пользоваться ботом 🙂'
 
         await message.answer(content, reply_markup=main_keyboard())
-    
 
 
 @start_router.message(Registration.contact)
@@ -94,6 +95,13 @@ async def contact_handler(message: Message, state: FSMContext) -> None:
     Handles the contact message in the Registration.contact state. Updates the user`s phone in the database,
     sends the message with the prompt to enter the referral code, and sets the state to Registration.referral.
     If any error occurs, sends the message with the error text and sets the state back to the start state.
+
+    Args:
+        message (Message): The message with the contact information.
+        state (FSMContext): The current state of the user.
+
+    Returns:
+        None
     """
     phone_number = message.contact.phone_number
     telegram_id = message.from_user.id
@@ -124,13 +132,21 @@ async def registration_referral_code_handler(message: Message, state: FSMContext
     Handles the referral code message in the Registration.referral state. Checks if the referral code exists in the database,
     sends the message with the result of the check, and sets the state back to the start state.
     If any error occurs, sends the message with the error text and sets the state back to the start state.
+
+    Args:
+        message (Message): The message with the referral code.
+        state (FSMContext): The current state of the user.
+
+    Returns:
+        None
     """
     referral_code = message.text
 
     await message.delete()
 
     try:
-        user_found_task = get_user_by_registration_referral_task.delay(referral_code)
+        user_found_task = get_user_by_registration_referral_task.delay(
+            referral_code)
         user_found = user_found_task.get()
 
         if user_found is True:

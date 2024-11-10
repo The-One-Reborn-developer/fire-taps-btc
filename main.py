@@ -17,6 +17,14 @@ load_dotenv(find_dotenv())
 
 
 async def on_startup() -> None:
+    """
+    Starts the bot.
+
+    This function creates all database tables if they don't already exist, and then starts the bot.
+
+    Returns:
+        None
+    """
     create_tables_task.delay()
 
     try:

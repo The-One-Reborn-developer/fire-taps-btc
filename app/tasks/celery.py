@@ -20,11 +20,11 @@ app = celery.Celery('tasks', broker='redis://redis:6379/0')
 
 
 app.conf.update(
-    task_routes = {
+    task_routes={
         'app.tasks.celery.*': {'queue': 'all_queues'},
     },
-    broker_connection_retry_on_startup = True,
-    result_backend = 'redis://redis:6379/0',
+    broker_connection_retry_on_startup=True,
+    result_backend='redis://redis:6379/0',
 )
 
 
@@ -37,7 +37,8 @@ def create_tables_task() -> None:
     to create all tables. In the event of an error during table creation, logs the 
     exception message.
 
-    This function does not return any value.
+    Returns:
+        None
     """
     logging.info('Creating tables...')
     create_tables()
@@ -106,7 +107,8 @@ def get_user_by_registration_referral_task(referral_code: str) -> bool:
         logging.info(f'User by registration referral: {referral_code} got.')
         return True
     else:
-        logging.info(f'User by registration referral: {referral_code} not found.')
+        logging.info(f'User by registration referral: {
+                     referral_code} not found.')
         return False
 
 

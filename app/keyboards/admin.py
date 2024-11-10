@@ -11,10 +11,11 @@ def admin_keyboard() -> ReplyKeyboardMarkup:
     2. 'Пополнить USDT кошелёк ' - replenishes the USDT wallet of the bot.
     3. 'Выйти из админ панели ' - exits the admin panel.
 
-    :return: ReplyKeyboardMarkup with the described buttons.
+    Returns:
+        ReplyKeyboardMarkup with the described buttons.
     """
-    return ReplyKeyboardMarkup (
-        keyboard = [
+    return ReplyKeyboardMarkup(
+        keyboard=[
             [
                 KeyboardButton(
                     text='Сгенерировать реф. код для игры 🎁'

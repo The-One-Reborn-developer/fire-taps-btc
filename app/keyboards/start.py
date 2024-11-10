@@ -10,12 +10,14 @@ def start_keyboard() -> ReplyKeyboardMarkup:
     1. 'Зарегистрироваться ' - starts the registration process.
     The button asks for the user's contact information.
 
-    :return: ReplyKeyboardMarkup with the described button.
+    Returns: 
+        ReplyKeyboardMarkup with the described button.
     """
     return ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text='Зарегистрироваться 📲', request_contact=True)
+                KeyboardButton(text='Зарегистрироваться 📲',
+                               request_contact=True)
             ]
         ],
         resize_keyboard=True,

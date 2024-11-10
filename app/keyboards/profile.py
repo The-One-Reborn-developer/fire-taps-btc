@@ -10,7 +10,8 @@ def profile_keyboard() -> InlineKeyboardMarkup:
     1. 'Вывести' - initiates a withdrawal process.
     2. 'Обновить реферальный код' - starts the process to update the referral code.
 
-    :return: InlineKeyboardMarkup with the described buttons.
+    Returns: 
+        InlineKeyboardMarkup with the described buttons.
     """
     return InlineKeyboardMarkup(
         inline_keyboard=[

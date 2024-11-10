@@ -28,6 +28,13 @@ admin_router = Router()
 async def admin_panel(message: Message, state: FSMContext) -> None:
     """
     Handles /admin command. Checks if user is admin and shows admin panel with bot`s balance and current referral code.
+
+    Args:
+        message (Message): Message object.
+        state (FSMContext): FSMContext object.
+
+    Returns:
+        None
     """
     try:
         user_task = get_user_by_id_task.delay(message.from_user.id)
@@ -51,7 +58,8 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
 
             content = 'Вход в панель администратора 🔑\n' \
                       f'Баланс USDT кошелька приложения: {formatted_balance} ₮\n' \
-                      f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
+                      f'Текущий реферальный код для игры: <code>{
+                          play_referral_code}</code>'
 
             await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
         else:
@@ -64,6 +72,13 @@ async def admin_panel(message: Message, state: FSMContext) -> None:
 async def exit_admin_panel(message: Message, state: FSMContext) -> None:
     """
     Handles "Выйти из админ панели" button in admin panel. Checks if user is admin, clears state and sends message about exiting the admin panel.
+
+    Args:
+        message (Message): Message object.
+        state (FSMContext): FSMContext object.
+
+    Returns:
+        None
     """
     try:
         user_task = get_user_by_id_task.delay(message.from_user.id)
@@ -86,6 +101,13 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
     """
     Handles "Сгенерировать реф. код для игры" button in admin panel. Checks if user is admin, generates new referral code,
     clears state and sends message about new referral code.
+
+    Args:
+        message (Message): Message object.
+        state (FSMContext): FSMContext object.
+
+    Returns:
+        None
     """
     try:
         user_task = get_user_by_id_task.delay(message.from_user.id)
@@ -106,7 +128,8 @@ async def generate_referral_code(message: Message, state: FSMContext) -> None:
             await state.clear()
 
             content = f'Баланс USDT кошелька приложения: {formatted_balance} ₮\n' \
-                      f'Текущий реферальный код для игры: <code>{play_referral_code}</code>'
+                f'Текущий реферальный код для игры: <code>{
+                    play_referral_code}</code>'
 
             await message.answer(content, reply_markup=admin_keyboard(), parse_mode='HTML')
         else:
@@ -120,6 +143,13 @@ async def deposit_btc(message: Message, state: FSMContext) -> None:
     """
     Handles "Пополнить USDT кошелёк" button in admin panel. Checks if user is admin,
     prompts for USDT amount to deposit, and sets the state for the deposit transaction.
+
+    Args:
+        message (Message): Message object.
+        state (FSMContext): FSMContext object.
+
+    Returns:
+        None
     """
     try:
         user_task = get_user_by_id_task.delay(message.from_user.id)
@@ -155,6 +185,13 @@ async def deposit_btc_amount(message: Message, state: FSMContext) -> None:
     If an exception occurs during this process, the error code is checked and if it
     is 400 (validation error), the user is sent a message with a hint to enter a
     valid amount.
+
+    Args:
+        message (Message): Message object.
+        state (FSMContext): FSMContext object.
+
+    Returns:
+        None
     """
     try:
         user_task = get_user_by_id_task.delay(message.from_user.id)
@@ -190,7 +227,11 @@ async def handle_payment(invoice: Invoice, message: Message) -> None:
     message to the user indicating the successful payment of the specified 
     amount and asset.
 
-    :param invoice: The Invoice object containing details of the payment.
-    :param message: The Message object to send a response to the user.
+    Args:
+        invoice (Invoice): The invoice that was paid.
+        message (Message): The message that triggered the payment event.
+
+    Returns:
+        None
     """
     await message.answer(f'Платеж {invoice.amount} {invoice.asset} успешно оплачён 🙂')

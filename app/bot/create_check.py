@@ -6,9 +6,11 @@ from app.bot.crypto_bot import crypto_bot
 def create_check(amount) -> Check | int:
     """
     Creates a check for the specified amount in USDT using the crypto bot.
-
-    :param amount: The amount for which to create the check.
-    :return: A Check object if successful, or 400 if there is a validation error with the input amount.
+    
+    Args:
+        amount: The amount for which to create the check.
+    Returns:
+        Check | int: A Check object if successful, or 400 if there is a validation error with the input amount.
     """
     try:
         check = crypto_bot.create_check(float(amount), 'USDT')
