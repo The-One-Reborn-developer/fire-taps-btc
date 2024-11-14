@@ -18,15 +18,8 @@ A [TG bot](https://t.me/fire_taps_btc_bot) for receiving Bitcoin and checking it
 * [redis](https://github.com/redis/redis-py)
 * [aiocpa](https://github.com/vovchic17/aiocpa)
 
-## INSTALLATION
-
-```bash
-pip install -r requirements.txt
-```
-
 ## RUNNING
 
 ```bash
-docker-compose build --no-cache
-docker-compose up
+docker-compose build --no-cache && docker-compose up
 ```
