@@ -1,4 +1,4 @@
-from cryptopay.types import Check
+from aiocpa.types import Check
 
 from app.bot.crypto_bot import crypto_bot
 

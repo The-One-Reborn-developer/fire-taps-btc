@@ -1,6 +1,6 @@
 import os
 
-from cryptopay import CryptoPay, TESTNET, MAINNET
+from aiocpa import CryptoPay, TESTNET, MAINNET
 
 from dotenv import load_dotenv, find_dotenv
 
