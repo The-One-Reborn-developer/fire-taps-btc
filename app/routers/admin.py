@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
-from cryptopay.types import Invoice
+from aiocpa.types import Invoice
 
 from app.bot.crypto_bot import crypto_bot
 
