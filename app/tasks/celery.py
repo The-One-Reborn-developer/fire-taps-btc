@@ -3,12 +3,12 @@ import logging
 
 from app.database.models.user import User
 
-from app.database.queues.create_tables import create_tables
-from app.database.queues.get_user_by_id import get_user_by_id
-from app.database.queues.get_user_by_play_referral import get_user_by_play_referral
-from app.database.queues.get_user_by_registration_referral import get_user_by_registration_referral
-from app.database.queues.post_user import post_user
-from app.database.queues.put_user import put_user
+from app.database.queries.create_tables import create_tables
+from app.database.queries.get_user_by_id import get_user_by_id
+from app.database.queries.get_user_by_play_referral import get_user_by_play_referral
+from app.database.queries.get_user_by_registration_referral import get_user_by_registration_referral
+from app.database.queries.post_user import post_user
+from app.database.queries.put_user import put_user
 
 from app.bot.convert_btc_to_usdt import convert_btc_to_usdt
 from app.bot.create_check import create_check

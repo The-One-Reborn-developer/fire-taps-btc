@@ -3,7 +3,7 @@ from sqlalchemy import select
 from app.database.models.user import User
 from app.database.models.sync_session import sync_session
 
-from app.database.queues.put_user import put_user
+from app.database.queries.put_user import put_user
 
 
 def get_user_by_registration_referral(referral_code: str) -> bool:

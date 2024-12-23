@@ -23,7 +23,7 @@ class Registration(StatesGroup):
 
 start_router = Router()
 
-
+'''
 @start_router.message(CommandStart())
 async def start_command(message: Message, state: FSMContext) -> None:
     """
@@ -42,7 +42,7 @@ async def start_command(message: Message, state: FSMContext) -> None:
     Returns:
         None
     """
-    await state.set_state(Registration.start)
+    #await state.set_state(Registration.start)
 
     telegram_id = message.from_user.id
     try:
@@ -70,11 +70,11 @@ async def start_command(message: Message, state: FSMContext) -> None:
             content = 'Приветствую 👋\nДобро пожаловать в Bitcoin кран от Fire Taps.\n' \
                 'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \
                 'Зови друзей в игру и получайте вместе ещё больше монет 🤵‍♂️🤵\n\n' \
-                'Чтобы начать нажми на кнопку внизу 👇'
+                #'Чтобы начать нажми на кнопку внизу 👇'
 
-            await state.set_state(Registration.contact)
-
-            await message.answer(content, reply_markup=start_keyboard())
+            #await state.set_state(Registration.contact)
+            await state.set_state(Registration.referral)
+            #await message.answer(content, reply_markup=start_keyboard())
         except Exception as e:
             print(f'Error creating user: {e}')
 
@@ -88,8 +88,8 @@ async def start_command(message: Message, state: FSMContext) -> None:
 
         await message.answer(content, reply_markup=main_keyboard())
 
-
-@start_router.message(Registration.contact)
+'''
+@start_router.message(CommandStart())
 async def contact_handler(message: Message, state: FSMContext) -> None:
     """
     Handles the contact message in the Registration.contact state. Updates the user`s phone in the database,
@@ -103,13 +103,16 @@ async def contact_handler(message: Message, state: FSMContext) -> None:
     Returns:
         None
     """
-    phone_number = message.contact.phone_number
+    #phone_number = message.contact.phone_number
     telegram_id = message.from_user.id
 
     try:
-        put_user_task.delay(telegram_id, phone=phone_number)
-
-        content = 'Введи реферальный код для завершения регистрации 🔑'
+        #put_user_task.delay(telegram_id, phone=phone_number)
+        put_user_task.delay(telegram_id)
+        content = 'Приветствую 👋\nДобро пожаловать в Bitcoin кран от Fire Taps.\n' \
+                'Только тут ты сможешь зарабатывать реальные деньги 💰 не вкладывая свои!\n' \
+                'Зови друзей в игру и получайте вместе ещё больше монет 🤵‍♂️🤵\n\n' \
+                'Введи реферальный код для завершения регистрации 🔑'
 
         await message.delete()
 
