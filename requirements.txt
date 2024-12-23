@@ -1,4 +1,4 @@
-aiocpa @ https://github.com/vovchic17/aiocpa/archive/refs/heads/main.zip#sha256=7183fd08eb8f684e1d7208f676c5aaeb08a80fa60dd682c7df2daef3221a2c19
+aiocpa @ https://github.com/vovchic17/aiocpa/archive/refs/heads/main.zip#sha256=afa7098f6750a486894d8c17898e9b69f7a7d572bc61ad052326e26bfb086da1
 aiofiles==24.1.0
 aiogram==3.13.1
 aiohappyeyeballs==2.4.3
